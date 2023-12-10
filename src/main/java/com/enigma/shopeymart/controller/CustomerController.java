@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,12 +23,12 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<Customer> getAll(){
+    public List<CustomerResponse> getAll(){
         return customerService.getAll();
     }
 
     @GetMapping("{id}")
-    public Customer getById(@PathVariable String id){
+    public CustomerResponse getById(@PathVariable String id){
         return customerService.getById(id);
     }
 

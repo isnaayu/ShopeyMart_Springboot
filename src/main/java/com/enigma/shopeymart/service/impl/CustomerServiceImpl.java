@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -35,13 +36,31 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getAll() {
-        return customerRepository.findAll();
+    public List<CustomerResponse> getAll() {
+        return customerRepository.findAll().stream().map((user ->{
+            CustomerResponse customerResponse = new CustomerResponse();
+            customerResponse.setId(user.getId());
+            customerResponse.setCustomerName(user.getName());
+            customerResponse.setCustomerAddress(user.getAddress());
+            customerResponse.setEmail(user.getEmail());
+            customerResponse.setPhone(user.getMobilePhone());
+            return customerResponse;
+        })).collect(Collectors.toList());
     }
 
     @Override
-    public Customer getById(String id) {
-        return customerRepository.findById(id).orElse(null);
+    public CustomerResponse getById(String id) {
+        return customerRepository.findById(id).map((user ->{
+            CustomerResponse customerResponse = new CustomerResponse();
+            customerResponse.setId(user.getId());
+            customerResponse.setCustomerName(user.getName());
+            customerResponse.setCustomerAddress(user.getAddress());
+            customerResponse.setEmail(user.getEmail());
+            customerResponse.setPhone(user.getMobilePhone());
+            return customerResponse;
+        })).orElse(null);
+//        return customerResponse;
+//        return customerRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -56,7 +75,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse update(CustomerRequest customerRequest) {
-        Customer currentCustomer = getById(customerRequest.getId());
+        CustomerResponse currentCustomer = getById(customerRequest.getId());
         if (currentCustomer != null){
             Customer customer = Customer.builder()
                     .id(customerRequest.getId())
