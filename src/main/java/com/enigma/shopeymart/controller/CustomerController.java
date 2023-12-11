@@ -3,19 +3,18 @@ package com.enigma.shopeymart.controller;
 import com.enigma.shopeymart.constant.AppPath;
 import com.enigma.shopeymart.dto.request.CustomerRequest;
 import com.enigma.shopeymart.dto.response.CustomerResponse;
-import com.enigma.shopeymart.entity.Customer;
+import com.enigma.shopeymart.service.CustomerService;
 import com.enigma.shopeymart.service.impl.CustomerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(AppPath.CUSTOMER)
 public class CustomerController {
-    public final CustomerServiceImpl customerService;
+    public final CustomerService customerService;
 
     @PostMapping
     public CustomerResponse create(@RequestBody CustomerRequest customerRequest){

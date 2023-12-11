@@ -3,6 +3,7 @@ package com.enigma.shopeymart.service;
 import com.enigma.shopeymart.dto.request.CustomerRequest;
 import com.enigma.shopeymart.dto.response.CustomerResponse;
 import com.enigma.shopeymart.entity.Customer;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

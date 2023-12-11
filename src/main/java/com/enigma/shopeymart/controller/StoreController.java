@@ -4,6 +4,7 @@ import com.enigma.shopeymart.constant.AppPath;
 import com.enigma.shopeymart.dto.request.StoreRequest;
 import com.enigma.shopeymart.dto.response.StoreResponse;
 import com.enigma.shopeymart.entity.Store;
+import com.enigma.shopeymart.service.StoreService;
 import com.enigma.shopeymart.service.impl.StoreServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(AppPath.STORE) //ini digunakan untuk default alamat jadi tidak harus menggunakaan /store
 public class StoreController {
-    private final StoreServiceImpl storeService;
+    private final StoreService storeService;
 
     @PostMapping //http://localhost:8080/store //POST
     public Store createStore(@RequestBody Store store){

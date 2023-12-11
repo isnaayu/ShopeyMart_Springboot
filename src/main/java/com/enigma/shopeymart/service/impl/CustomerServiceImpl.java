@@ -59,8 +59,6 @@ public class CustomerServiceImpl implements CustomerService {
             customerResponse.setPhone(user.getMobilePhone());
             return customerResponse;
         })).orElse(null);
-//        return customerResponse;
-//        return customerRepository.findById(id).orElse(null);
     }
 
     @Override
