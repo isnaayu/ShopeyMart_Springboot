@@ -6,13 +6,14 @@ import com.enigma.shopeymart.entity.Customer;
 import com.enigma.shopeymart.repository.CustomerRepository;
 import com.enigma.shopeymart.service.CustomerService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
