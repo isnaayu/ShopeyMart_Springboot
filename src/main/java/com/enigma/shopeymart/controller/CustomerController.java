@@ -4,7 +4,6 @@ import com.enigma.shopeymart.constant.AppPath;
 import com.enigma.shopeymart.dto.request.CustomerRequest;
 import com.enigma.shopeymart.dto.response.CustomerResponse;
 import com.enigma.shopeymart.service.CustomerService;
-import com.enigma.shopeymart.service.impl.CustomerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

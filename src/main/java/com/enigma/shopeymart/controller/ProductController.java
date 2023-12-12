@@ -5,7 +5,6 @@ import com.enigma.shopeymart.dto.request.ProductRequest;
 import com.enigma.shopeymart.dto.response.CommonResponse;
 import com.enigma.shopeymart.dto.response.ProductResponse;
 import com.enigma.shopeymart.entity.Product;
-import com.enigma.shopeymart.entity.ProductPrice;
 import com.enigma.shopeymart.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,6 +38,11 @@ public class ProductController {
     @GetMapping
     public List<Product> getAllProduct(){
         return productService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public ProductResponse getById(@PathVariable String id){
+        return productService.getById(id);
     }
 
 

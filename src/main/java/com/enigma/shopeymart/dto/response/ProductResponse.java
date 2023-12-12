@@ -21,5 +21,5 @@ public class ProductResponse {
     private Long price;
     private Integer stock;
     private StoreResponse store;
-    private List<ProductPrice> productPriceList;
+//    private List<ProductPrice> productPriceList;
 }
