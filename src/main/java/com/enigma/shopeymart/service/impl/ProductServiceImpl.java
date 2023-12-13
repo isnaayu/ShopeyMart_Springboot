@@ -10,11 +10,20 @@ import com.enigma.shopeymart.repository.ProductRepository;
 import com.enigma.shopeymart.service.ProductPriceService;
 import com.enigma.shopeymart.service.ProductService;
 import com.enigma.shopeymart.service.StoreService;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,17 +45,6 @@ public class ProductServiceImpl implements ProductService {
                 .description(product.getDescription())
                 .build();
     }
-
-//    @Override
-//    public List<ProductResponse> getAll() {
-//        return productRepository.findAll().stream().map(product -> ProductResponse.builder()
-//                    .ProductId(product.getId())
-//                    .ProductName(product.getName())
-//                    .description(product.getDescription())
-//                    .productPriceList(product.getProductPrices())
-//                    .build()
-//        ).collect(Collectors.toList());
-//    }
 
     @Override
     public List<Product> getAll() {
@@ -93,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
     public void delete(String id) {
         if (getById(id) != null){
             productRepository.deleteById(id);
-            System.out.println("Delete Succesfully");
+            System.out.println("Delete Successfully");
         }else {
             System.out.printf("Delete Failed!");
         }
@@ -126,6 +124,54 @@ public class ProductServiceImpl implements ProductService {
                         .id(store.getId())
                         .noSiup(store.getNoSiup())
                         .storeName(store.getName())
+                        .build())
+                .build();
+    }
+
+    @Override
+    public Page<ProductResponse> getAllByNameOrPrice(String name, Long maxPrice, Integer page, Integer size) {
+//        Specification untuk menentukan kriteria, disini criteria pencarian ditandakan dengan root, root yang dimaksus adalah entity model
+        Specification<Product> specification = ((root, query, criteriaBuilder) -> {
+//            Join digunakan untuk merelasikan antara product dan product peice
+            Join<Product, ProductPrice> productPrices = root.join("productPrices");
+//            Predicate digunakan untuk menggunakan LIKE dimana nanti kita akan menggunakan kondisi pencarian parameter
+//            disini kita akan mencari nama product atau harga yang sama atau harga dibawahnya, makanya menggunakan lessThanOrEquals
+            List<Predicate> predicates = new ArrayList<>();
+            if (name != null) predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+            if (maxPrice != null) predicates.add(criteriaBuilder.lessThanOrEqualTo(productPrices.get("price"), maxPrice));
+//            kode return mengembalikan query dimana pada dasarnya kita membangun klause where yang sudah ditentukan dari predicate atau kriteria
+            return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
+        });
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Product> products = productRepository.findAll(specification, pageable);
+//        Ini digunakan untuk menyimpan rensponse product yang baru
+        List<ProductResponse> productResponses = new ArrayList<>();
+        for (Product product : products.getContent()){
+//            for disini digunakan untuk mengiterasi daftar product yang disimpan dalam object
+            Optional<ProductPrice> productPrice = product.getProductPrices()
+                    .stream()
+                    .filter(ProductPrice::isActive).findFirst();
+            if (productPrice.isEmpty()) continue; //kindisi ini digunakan untuk memeriksa apakah productPricenya kosong atau tidak, kalau tidak maka di skip
+            Store store = productPrice.get().getStore(); //ini digunakan untuk jika harga yang aktif ditenttukan di store
+            productResponses.add(toProductResponse(store, product, productPrice.get()));
+
+        }
+        return new PageImpl<>(productResponses, pageable, products.getTotalElements());
+    }
+
+    private static ProductResponse toProductResponse(Store store, Product product, ProductPrice productPrice){
+        return ProductResponse.builder()
+                .ProductId(product.getId())
+                .ProductName(product.getName())
+                .description(product.getDescription())
+                .price(productPrice.getPrice())
+                .stock(productPrice.getStock())
+                .store(StoreResponse.builder()
+                        .id(store.getId())
+                        .storeName(store.getName())
+                        .noSiup(store.getNoSiup())
+                        .address(store.getAddress())
+                        .phone(store.getMobilePhone())
                         .build())
                 .build();
     }
