@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.enigma.shopeymart.entity.AppUser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -19,8 +20,13 @@ public class JwtUtil {
 //    Generate TOken
 //    Generate data by username
 //    Validation
-    private final String jwtSecret = "secret";
-    private final String appName = "Shopey Mart Application";
+    @Value("${app.shopeymart.jwt.jwt-secret}")
+    private String jwtSecret;
+    @Value("${app.shopeymart.jwt.app-name}")
+    private String appName;
+
+    @Value("${app.shopeymart.jwt.jwtExpirationInSecond}")
+    private Long jwtExpirationInSecond;
 
     public String generateToken(AppUser appUser){
         try {
@@ -28,7 +34,7 @@ public class JwtUtil {
             String token = JWT.create()
                     .withIssuer(appName) //Info untuk application cara yang kita buat
                     .withSubject(appUser.getId()) // menentukan object yang aan dibuat biasanya dari IO
-                    .withExpiresAt(Instant.now().plusSeconds(60)) // menetapkan waktu kadaluarsa token nanti, dalam sini kadalauarsanya adalah 60 detik setelah dibuat
+                    .withExpiresAt(Instant.now().plusSeconds(jwtExpirationInSecond)) // menetapkan waktu kadaluarsa token nanti, dalam sini kadalauarsanya adalah 60 detik setelah dibuat
                     .withIssuedAt(Instant.now()) // menetapkan waktu token kapan dibuat
                     .withClaim("role", appUser.getRole().name()) // menambahkan claim atau info name pengguna
                     .sign(algorithm); // ini seperti ttd kontrak bahwa algorithm yang kita pakai itu udah pasti HMA256
