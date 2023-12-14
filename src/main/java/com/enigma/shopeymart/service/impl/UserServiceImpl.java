@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //        Method ini untuk cek by username sebagai authenthication untuk login
-        UserCredential userCredential = userCredentialRepository.finfByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Invalid credential"));
+        UserCredential userCredential = userCredentialRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Invalid credential"));
         return AppUser.builder()
                 .id(userCredential.getId())
                 .username(userCredential.getUsername())
