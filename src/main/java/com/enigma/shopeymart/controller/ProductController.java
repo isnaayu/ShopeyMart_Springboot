@@ -40,6 +40,7 @@ public class ProductController {
 //    }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Product> getAllProduct(){
         return productService.getAll();
     }

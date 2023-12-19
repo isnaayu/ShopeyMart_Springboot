@@ -6,7 +6,7 @@ import com.enigma.shopeymart.entity.Store;
 
 import java.util.List;
 
-public interface StoreService {
+public interface StoreService{
     Store create(Store store);
     Store update(Store store);
     void delete(String id);
