@@ -5,6 +5,7 @@ import com.enigma.shopeymart.dto.request.CustomerRequest;
 import com.enigma.shopeymart.dto.response.CustomerResponse;
 import com.enigma.shopeymart.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

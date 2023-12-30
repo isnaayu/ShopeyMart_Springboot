@@ -94,4 +94,16 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return null;
     }
+
+    @Override
+    public CustomerResponse createNewCustomer(Customer request) {
+        Customer customer = customerRepository.saveAndFlush(request);
+        return CustomerResponse.builder()
+                .id(customer.getId())
+                .CustomerName(customer.getName())
+                .Phone(customer.getMobilePhone())
+                .email(customer.getEmail())
+                .CustomerAddress(customer.getAddress())
+                .build();
+    }
 }
